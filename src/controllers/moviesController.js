@@ -3,7 +3,7 @@ const db = require('../database/models');
 const sequelize = db.sequelize;
 const { Op } = require("sequelize");
 const moment = require('moment');
-
+const { validationResult } = require("express-validator");
 
 //Aqui tienen una forma de llamar a cada uno de los modelos
 // const {Movies,Genres,Actor} = require('../database/models');
@@ -25,14 +25,15 @@ const moviesController = {
         db.Movie.findByPk(req.params.id,{
             include : [
                 {
-                    association : 'genre'
+                    association : 'genero'
                 },
                 {
-                    association : 'actors'
+                    association : 'actores'
                 }
             ]
         })
             .then(movie => {
+                console.log(movie);
                 res.render('moviesDetail.ejs', {movie});
             });
     },
@@ -73,6 +74,11 @@ const moviesController = {
         .catch(error => console.log(error))
     },
     create: function (req,res) {
+        let errors = validationResult(req)
+        errors = errors.mapped()
+
+
+        if (Object.entries(errors).length === 0) {
         db.Movie.create({
             ...req.body,
             title : req.body.title.trim()
@@ -82,9 +88,24 @@ const moviesController = {
                 return res.redirect('/movies/detail/' + newMovie.id)
             })
             .catch(error => console.log(error))
+        }
+        else {
+            db.Genre.findAll({
+                order :['name']
+            })
+                .then(allGenres => {
+                    return res.render('moviesAdd',{
+                        allGenres,
+                        errors,
+                        old: req.body,
+                    })
+            })
+            .catch(error => console.log(error))
+        }
         
     },
     edit: function(req,res) {
+        
         let movie = db.Movie.findByPk(req.params.id);
         let allGenres = db.Genre.findAll({
             order :['name']
@@ -100,21 +121,39 @@ const moviesController = {
             .catch(error => console.log(error))
     },
     update: function (req,res) {
-        db.Movie.update(
-            {
-                ...req.body
-            },
-            {
-                where : {
-                    id : req.params.id
+        let errors = validationResult(req)
+        errors = errors.mapped()
+        if (Object.entries(errors).length === 0) {
+            db.Movie.update(
+                {
+                    ...req.body
+                },
+                {
+                    where : {
+                        id : req.params.id
+                    }
                 }
-            }
-        )
-            .then(result => {
-                console.log('>>>>>>>>>>>>>>>>',result)
-                return res.redirect('/movies/detail/' + req.params.id)
-            })
-            .catch(error => console.log(error))
+            )
+                .then(result => {
+                    return res.redirect('/movies/detail/' + req.params.id)
+                })
+                .catch(error => console.log(error))
+            } else {
+                let movie = db.Movie.findByPk(req.params.id);
+                let allGenres = db.Genre.findAll({
+                    order :['name']
+                });
+                Promise.all([movie,allGenres])
+                    .then(([movie,allGenres]) => {
+                        return res.render('moviesEdit',{
+                            Movie: movie,
+                            allGenres,
+                            moment,
+                            errors
+                        })
+                    })
+                    .catch(error => console.log(error))
+        }
 
     },
     delete: function (req,res) {

@@ -4,7 +4,9 @@ module.exports = (sequelize, dataTypes) => {
         id: {
             type: dataTypes.BIGINT(10).UNSIGNED,
             primaryKey: true,
+            allowNull: false,
             autoIncrement: true
+            
         },
         // created_at: dataTypes.TIMESTAMP,
         // updated_at: dataTypes.TIMESTAMP,
@@ -26,18 +28,18 @@ module.exports = (sequelize, dataTypes) => {
         timestamps: true,
         createdAt: 'created_at',
         updatedAt: 'updated_at',
-        
+        tableName: 'actors',
         deletedAt: false
     }
     const Actor = sequelize.define(alias, cols, config); 
 
     //Aquí debes realizar lo necesario para crear las relaciones con el modelo (Movie)
-    Actor.association = (models) => {
+    Actor.associate = (models) => {
         Actor.belongsToMany(models.Movie,{
-            as : 'movies',
+            as : 'peliculas',
             through : 'actor_movie',
             foreignKey : 'actor_id',
-            otherKey : 'movie_id',
+            otherKey : 'movie_id'
         });
     }
 

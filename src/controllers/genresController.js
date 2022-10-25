@@ -13,7 +13,7 @@ const genresController = {
         db.Genre.findByPk(req.params.id,{
             include : [
                 {
-                    association : 'movies'
+                    association : 'peliculas_genero'
                 }
             ]
         })

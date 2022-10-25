@@ -1,6 +1,6 @@
 const express = require('express');
 const path = require('path');
-
+const methodOverride = require ("method-override");
 
 const indexRouter = require('./routes/index');
 
@@ -15,9 +15,10 @@ app.set('view engine', 'ejs');
 
 app.use(express.static(path.resolve(__dirname, '../public')));
 
+app.use (methodOverride ("_method"));
+
 //URL encode  - Para que nos pueda llegar la información desde el formulario al req.body
 app.use(express.urlencoded({ extended: false }));
-
 
 app.use('/', indexRouter);
 app.use(moviesRoutes);

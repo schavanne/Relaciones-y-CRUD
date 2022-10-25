@@ -13,13 +13,12 @@ const actorsController = {
         db.Actor.findByPk(req.params.id,{
             include : [
                 {
-                    association : 'movies'
+                    association : 'peliculas'
                 }
             ]
         })
-            .then(actors => {
-                console.log(actors);
-                res.render('actorsDetail.ejs', {actors});
+            .then(actor => {
+                res.render('actorsDetail.ejs', {actor});
             });
     }
 

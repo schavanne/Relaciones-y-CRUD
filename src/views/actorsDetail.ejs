@@ -8,16 +8,16 @@
 
 </head>
 <body>
-    <figure>
+    <a class="icono" href="/">
         <img src="/img/logo-DH.png" alt="Logo Digital House">
-    </figure>    
+    </a>   
     <h1><%= actor.first_name + actor.last_name %> </h1>
     <br>
     <p>RATING: <%= actor.rating %> </p>
     <br>
     <h4>PELICULAS</h4>
     <ul>
-        <% actor.movies.forEach(movie => { %>
+        <% actor.peliculas.forEach(movie => { %>
             <li><a href="/movies/detail/<%= movie.id %>"><%= movie.title %> </a></li>
         <% }) %>
     </ul>

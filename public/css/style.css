@@ -15,7 +15,8 @@ a {
 img{
   width: 100%;
 }
-figure{
+figure,a.icono{
+  display: block;
   width: 20%;
 }
 .titulo{
