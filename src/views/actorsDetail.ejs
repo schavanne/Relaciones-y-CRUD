@@ -15,11 +15,30 @@
     <br>
     <p>RATING: <%= actor.rating %> </p>
     <br>
-    <h4>PELICULAS</h4>
+    <h4>PELICULAS QUE PARTICIPA</h4>
     <ul>
+        <%= console.log(actor.peliculas) %> 
+        <% if (actor.peliculas.length == 0) { %>
+         Ninguna
+        <% } %>
         <% actor.peliculas.forEach(movie => { %>
             <li><a href="/movies/detail/<%= movie.id %>"><%= movie.title %> </a></li>
         <% }) %>
     </ul>
+    <br>
+    <h4>PELICULAS FAVORITAS</h4>
+    <ul>
+        
+        <% movies.forEach(movie => { %>
+            <% if (movie.id == actor.favorite_movie_id) { %>
+                <li><a href="/movies/detail/<%= movie.id %>"><%= movie.title %> </a></li>
+            <% } %>
+        <% }) %>
+    </ul>
+    <section style="display: flex; gap: 5px; margin-top: 20px">
+        <!--Aquí debe colocar los botones de Modificar - Borrar y Listado de Películas-->
+        <a class="botonModificar" href="/actors/edit/<%= actor.id  %>">Editar</a><br>
+        <a class="botonBorrar" href="/actors/delete/<%= actor.id  %>">Eliminar</a>
+    </section>
 </body>
 </html>
